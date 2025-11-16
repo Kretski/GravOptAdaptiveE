@@ -1,0 +1,4 @@
+from gravopt import GravOptAdaptiveE_QV
+import pennylane as qml
+
+opt = GravOptAdaptiveE_QV(params, lr=0.02)
