@@ -11,3 +11,20 @@ This directory contains example scripts to demonstrate the capabilities of AZURO
 ### Final Optimized Points on Parameter Plane
 - **Image**: [Final Optimized Points on Parameter Plane](link-to-image-or-placeholder)
 - **Text**: "GravOptTorch achieves ~23% efficiency at T=600-700°C, P=5 bar, closely matching RMSprop. LBFGS deviates to 21.65% at 10 bar."
+## Visual Results
+
+### Convergence Heatmap
+- **Image**: ![Convergence Heatmap](images/convergence_heatmap.png)
+- **Description**: Shows the loss convergence of GravOptTorch, LBFGS, RMSprop, SGD, and Adam over 150 iterations.
+
+### Loss Comparison
+- **Image**: ![Loss Comparison](images/loss_comparison.png)
+- **Description**: Compares loss trajectories, with GravOptTorch matching RMSprop/SGD (~-0.24).
+
+### 3D Loss Landscape with Optimization Trajectories
+- **Image**: ![3D Loss Landscape](images/3d_loss_landscape.png)
+- **Description**: Displays the 3D optimization surface with trajectories, highlighting GravOptTorch's smooth path.
+
+### Final Optimized Points on Parameter Plane
+- **Image**: ![Final Optimized Points on Parameter Plane](images/final_optimized_points.png)
+- **Text**: "GravOptTorch achieves ~23% efficiency at T=600-700°C, P=5 bar, closely matching RMSprop. LBFGS deviates to 21.65% at 10 bar."
