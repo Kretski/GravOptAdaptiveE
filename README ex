@@ -6,3 +6,8 @@ This directory contains example scripts to demonstrate the capabilities of AZURO
 - **Description**: A demonstration of GravOptTorch compared to Adam, SGD, RMSprop, and LBFGS for optimizing a Two-Stroke engine model. Includes GUI and visualizations (Convergence Heatmap, 3D Loss Landscape, etc.).
 - **Usage**: Run `python example_two_stroke_optimizer.py` to launch the GUI and benchmark the optimizers.
 - **Dependencies**: PyTorch, Plotly, Tkinter.
+## Optimization Results
+
+### Final Optimized Points on Parameter Plane
+- **Image**: [Final Optimized Points on Parameter Plane](link-to-image-or-placeholder)
+- **Text**: "GravOptTorch achieves ~23% efficiency at T=600-700°C, P=5 bar, closely matching RMSprop. LBFGS deviates to 21.65% at 10 bar."
