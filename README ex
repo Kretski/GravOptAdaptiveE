@@ -1,0 +1,8 @@
+# AZURO AI Examples
+This directory contains example scripts to demonstrate the capabilities of AZURO AI's quantum-inspired optimizer, GravOptTorch.
+
+## Two-Stroke Engine Optimizer
+- **File**: `example_two_stroke_optimizer.py`
+- **Description**: A demonstration of GravOptTorch compared to Adam, SGD, RMSprop, and LBFGS for optimizing a Two-Stroke engine model. Includes GUI and visualizations (Convergence Heatmap, 3D Loss Landscape, etc.).
+- **Usage**: Run `python example_two_stroke_optimizer.py` to launch the GUI and benchmark the optimizers.
+- **Dependencies**: PyTorch, Plotly, Tkinter.
