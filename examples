@@ -1,0 +1,438 @@
+import time
+import numpy as np
+import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+import plotly.express as px
+import tkinter as tk
+from tkinter import ttk
+import torch
+from torch.optim import Optimizer as TorchOptimizer
+import tkinter.messagebox
+import csv
+import os
+
+# Torch availability check
+try:
+    torch.set_default_dtype(torch.float32)
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+except Exception:
+    raise RuntimeError("PyTorch is required. Install via: pip install torch")
+
+# GravOptTorch (v3-like) implementation
+class GravOptTorch(TorchOptimizer):
+    def __init__(self, params, lr=1e-2, alpha=0.08, c=0.9, M_max=2.5, beta=0.01,
+                 momentum=0.9, h_decay=0.985, warmup_steps=10, freeze_percentile=30.0,
+                 unfreeze_gain=0.8, noise_scale=1e-4, update_every=1):
+        if isinstance(params, torch.Tensor):
+            params = [params]
+        defaults = dict(lr=lr, alpha=alpha, c=c, M_max=M_max, beta=beta,
+                        momentum=momentum, h_decay=h_decay, warmup_steps=warmup_steps,
+                        freeze_percentile=freeze_percentile, unfreeze_gain=unfreeze_gain,
+                        noise_scale=noise_scale, update_every=update_every)
+        super().__init__(params, defaults)
+        self.global_step = 0
+
+    @torch.no_grad()
+    def step(self, closure=None):
+        loss = None
+        if closure is not None:
+            loss = closure()
+        self.global_step += 1
+        all_grads = []
+        for group in self.param_groups:
+            for p in group['params']:
+                if p.grad is not None:
+                    g = p.grad.detach()
+                    all_grads.append(g.abs().flatten())
+        if len(all_grads) == 0:
+            return loss
+        all_grads = torch.cat(all_grads)
+        med = torch.median(all_grads)
+        for group in self.param_groups:
+            lr = group['lr']
+            alpha = group['alpha']
+            c = group['c']
+            M_max = group['M_max']
+            beta = group['beta']
+            momentum = group['momentum']
+            h_decay = group['h_decay']
+            warmup_steps = group['warmup_steps']
+            freeze_percentile = group['freeze_percentile']
+            unfreeze_gain = group['unfreeze_gain']
+            noise_scale = group['noise_scale']
+            update_every = group.get('update_every', 1)
+            do_update = (self.global_step % update_every) == 0
+            adaptive_thr = 0.0 if self.global_step <= warmup_steps else max((med.item() * (freeze_percentile / 100.0)), 1e-12)
+            alpha_t = alpha / (1.0 + beta * self.global_step)
+            for p in group['params']:
+                if p.grad is None:
+                    continue
+                g = p.grad
+                state = self.state.setdefault(p, {})
+                if 'exp_avg' not in state:
+                    state['exp_avg'] = torch.zeros_like(p)
+                    state['h'] = torch.ones_like(p) * 1.5
+                    state['last_update'] = torch.zeros_like(p, dtype=torch.long)
+                exp_avg = state['exp_avg']
+                exp_avg.mul_(momentum).add_(g, alpha=1.0 - momentum)
+                grad_abs = exp_avg.abs()
+                state['h'].mul_(h_decay)
+                if self.global_step > warmup_steps:
+                    freeze_mask = grad_abs < adaptive_thr
+                    state['h'] = torch.where(freeze_mask, torch.clamp(state['h'] - 0.05, min=0.0), state['h'])
+                unfreeze_factor = torch.tanh(unfreeze_gain * grad_abs / (adaptive_thr + 1e-12))
+                state['h'] = torch.clamp(state['h'] + unfreeze_factor, min=0.0, max=2.5)
+                delta_w = -lr * exp_avg
+                delta_t = torch.clamp((self.global_step - state['last_update']).float(), min=1.0)
+                M = 1.0 + alpha_t * (c**2) * state['h'] / (delta_t.sqrt() + 1e-12)
+                M = torch.clamp(M, max=M_max)
+                if do_update:
+                    update_mask = state['h'] > 0.05
+                    if update_mask.any():
+                        noise = torch.randn_like(p) * noise_scale
+                        full_delta = delta_w * M + noise
+                        p.add_(full_delta * update_mask.to(full_delta.dtype))
+                        state['last_update'] = torch.where(update_mask, torch.full_like(state['last_update'], self.global_step), state['last_update'])
+        return loss
+
+def two_stroke_hypothetical(theta):
+    T, P, RPM = theta[0], theta[1], theta[2]
+    
+    # Slightly reduced coefficients for 25-27% range
+    rpm_opt = 5500.0
+    rpm_spread = 1500.0
+    rpm_eff = 0.22 * torch.exp(-0.5 * ((RPM - rpm_opt) / rpm_spread) ** 2)  # Reduced from 0.25
+    
+    T_eff = 0.00009 * torch.clamp(T, max=1000)  # Reduced from 0.0001
+    P_eff = 0.0009 * torch.clamp(P, max=20)     # Reduced from 0.001
+    
+    # Interaction penalty
+    interaction = -0.000006 * (T * P)  # Very small penalty
+    
+    efficiency = T_eff + P_eff + rpm_eff + interaction + 0.028  # Reduced base from 0.03
+    noise = 0.001 * torch.randn(1, device=theta.device).squeeze()
+    return -efficiency + noise
+
+def two_stroke_real(theta, Fuel=None, Exhaust=None):
+    T, P, RPM = theta[0], theta[1], theta[2]
+    
+    # Slightly reduced coefficients for 25-27% range
+    rpm_opt = 5500.0
+    rpm_spread = 1500.0
+    rpm_eff = 0.22 * torch.exp(-0.5 * ((RPM - rpm_opt) / rpm_spread) ** 2)  # Reduced from 0.25
+    
+    T_eff = 0.00009 * torch.clamp(T, max=1000)  # Reduced from 0.0001
+    P_eff = 0.0009 * torch.clamp(P, max=20)     # Reduced from 0.001
+    
+    # Interaction penalty
+    interaction = -0.000006 * (T * P)  # Very small penalty
+    
+    efficiency = T_eff + P_eff + rpm_eff + interaction + 0.028  # Reduced base from 0.03
+    if Fuel is not None:
+        efficiency += 0.0002 * Fuel
+    if Exhaust is not None:
+        efficiency -= 0.00001 * Exhaust
+    
+    noise = 0.001 * torch.randn(1, device=theta.device).squeeze()
+    return -efficiency + noise
+
+def run_torch_optimizer(optimizer_name, init_point, loss_fn_torch, steps=200, device='cpu'):
+    theta = torch.tensor(init_point, dtype=torch.float32, requires_grad=True, device=device)
+    history = []
+    traj = []
+    optimizers = {
+        'Adam': torch.optim.Adam([theta], lr=0.01),
+        'SGD': torch.optim.SGD([theta], lr=0.01, momentum=0.9),
+        'RMSprop': torch.optim.RMSprop([theta], lr=0.01),
+        'LBFGS': torch.optim.LBFGS([theta], lr=0.1, max_iter=10, history_size=5), # Reduced steps
+        'GravOptTorch': GravOptTorch([theta], lr=0.02)
+    }
+    optim = optimizers[optimizer_name]
+    for step in range(steps):
+        if optimizer_name == 'LBFGS':
+            def closure():
+                optim.zero_grad()
+                loss = loss_fn_torch(theta)
+                # 🔒 Penalty inside LBFGS closure for stricter control
+                penalty = 100.0 * (torch.clamp(theta[0] - 1000, min=0) ** 2 +
+                                   torch.clamp(10 - theta[1], min=0) ** 2 +
+                                   torch.clamp(theta[2] - 6000, min=0) ** 2)
+                total_loss = loss + penalty
+                total_loss.backward()
+                return total_loss
+            loss_val = optim.step(closure)
+        else:
+            optim.zero_grad()
+            loss = loss_fn_torch(theta)
+            loss.backward()
+            optim.step()
+        
+        # 🔒 PROJECTION TO REALISTIC BOUNDS (for all optimizers)
+        with torch.no_grad():
+            theta[0] = torch.clamp(theta[0], 500, 1200)    # T
+            theta[1] = torch.clamp(theta[1], 5, 30)        # P
+            theta[2] = torch.clamp(theta[2], 1000, 15000)  # RPM
+
+        history.append(float(loss_val.item()) if optimizer_name == 'LBFGS' else float(loss.item()))
+        traj.append(theta.detach().cpu().numpy().copy())
+    return history, np.array(traj)
+
+def run_benchmark_torch(init_point=None, steps=200, device='cpu', Fuel=None, Exhaust=None):
+    if init_point is None:
+        init_point = np.array([800.0, 15.0, 5000.0], dtype=float)
+    optimizers = ['Adam', 'SGD', 'RMSprop', 'LBFGS', 'GravOptTorch']
+    results = []
+    print("Running Torch benchmark with optimizers:", optimizers)
+    for name in optimizers:
+        print("->", name)
+        try:
+            if Fuel is not None or Exhaust is not None:
+                hist, traj = run_torch_optimizer(
+                    name, init_point,
+                    lambda x: two_stroke_real(x, Fuel=Fuel, Exhaust=Exhaust),
+                    steps=steps, device=device
+                )
+            else:
+                hist, traj = run_torch_optimizer(
+                    name, init_point,
+                    two_stroke_hypothetical,
+                    steps=steps, device=device
+                )
+            results.append({'name': name, 'loss_hist': hist, 'trajectory': traj, 'final': traj[-1]})
+            print(f" finished: final loss {hist[-1]:.4e}, steps {len(hist)}")
+        except Exception as e:
+            print(" ERROR running", name, ":", e)
+    return results
+
+def compute_efficiency_hypothetical(theta):
+    T, P, RPM = theta[0], theta[1], theta[2]
+    
+    # Same formula as two_stroke_hypothetical (without noise), but scaled for display
+    rpm_opt = 5500.0
+    rpm_spread = 1500.0
+    rpm_eff = 0.22 * np.exp(-0.5 * ((RPM - rpm_opt) / rpm_spread) ** 2)
+    T_eff = 0.00009 * min(T, 1000)
+    P_eff = 0.0009 * min(P, 20)
+    interaction = -0.000006 * (T * P)
+    # Convert to percentage ONLY for display/export
+    return (T_eff + P_eff + rpm_eff + interaction + 0.028) * 100
+
+def is_realistic(T, P, RPM):
+    return (500 <= T <= 1200) and (5 <= P <= 30) and (1000 <= RPM <= 15000)
+
+def analyze_and_export_results(results, mode, init_point, Fuel=None, Exhaust=None):
+    print("\n=== FINAL PARAMETERS ANALYSIS ===")
+    rows = []
+    for r in results:
+        T, P, RPM = r['final']
+        efficiency = compute_efficiency_hypothetical(r['final'])
+        realistic = is_realistic(T, P, RPM)
+        status = "✅ Valid" if realistic else "⚠️ Unrealistic"
+        print(f"{r['name']:12} | T={T:7.1f}°C | P={P:5.1f} bar | RPM={RPM:7.0f} | Eff={efficiency:6.2f}% | {status}")
+        rows.append([r['name'], T, P, RPM, efficiency, realistic, mode, Fuel, Exhaust])
+
+    # Export to CSV
+    timestamp = time.strftime("%Y%m%d-%H%M%S")
+    filename = f"optimization_results_{timestamp}.csv"
+    with open(filename, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['Optimizer', 'T_C', 'P_bar', 'RPM', 'Efficiency_%', 'Realistic', 'Mode', 'Fuel', 'Exhaust'])
+        writer.writerows(rows)
+    print(f"\n✅ Results exported to: {filename}")
+
+def plot_results_plotly(results):
+    fig = go.Figure()
+    for r in results:
+        fig.add_trace(go.Scatter(y=r['loss_hist'], mode='lines', name=r['name']))
+    fig.update_layout(title='Loss Comparison (Optimizers)', xaxis_title='Iteration', yaxis_title='Loss')
+    fig.show()
+
+    maxlen = max(len(r['loss_hist']) for r in results)
+    z = np.array([r['loss_hist'] + [r['loss_hist'][-1]]*(maxlen - len(r['loss_hist'])) for r in results])
+    names = [r['name'] for r in results]
+    heat = go.Figure(data=go.Heatmap(z=z, x=list(range(maxlen)), y=names, colorscale='Hot'))
+    heat.update_layout(title='Convergence Heatmap (Loss)')
+    heat.show()
+
+    # 3D surface: Correctly using compute_efficiency_hypothetical formula (for display)
+    xs = np.linspace(600, 1000, 80)
+    ys = np.linspace(10, 20, 80)
+    X, Y = np.meshgrid(xs, ys)
+    rpm_fixed = 5000.0  # Fixed RPM for 2D slice
+    Z = np.array([
+        [
+            compute_efficiency_hypothetical(np.array([x, y, rpm_fixed]))
+            for y in ys
+        ]
+        for x in xs
+    ])
+
+    surf = go.Figure(data=[go.Surface(x=X, y=Y, z=Z, colorscale='Viridis', opacity=0.7)])
+    colors = px.colors.qualitative.Plotly
+    for i, r in enumerate(results):
+        traj = r['trajectory']  # Full trajectory: [T, P, RPM]
+        if traj.shape[0] > 0:
+            # Compute efficiency for each point using the full model (for display)
+            zs = [compute_efficiency_hypothetical(point) for point in traj]
+            surf.add_trace(go.Scatter3d(
+                x=traj[:, 0], y=traj[:, 1], z=zs,
+                mode='lines+markers', name=r['name'],
+                line=dict(width=4, color=colors[i % len(colors)])
+            ))
+    surf.update_layout(
+        title='3D Loss Landscape (Realistic Model) with Trajectories',
+        scene=dict(
+            xaxis_title='Temperature (°C)',
+            yaxis_title='Pressure (bar)',
+            zaxis_title='Efficiency (%)'
+        )
+    )
+    surf.show()
+
+    # Final points plot
+    finals_2d = np.array([r['final'][:2] for r in results])
+    final_efficiencies = np.array([compute_efficiency_hypothetical(r['final']) for r in results])
+
+    scatter = go.Figure()
+    scatter.add_trace(go.Scatter(
+        x=finals_2d[:, 0], y=finals_2d[:, 1], mode='markers+text',
+        marker=dict(size=12, color=final_efficiencies, colorscale='Turbo', showscale=True),
+        text=[r['name'] for r in results], textposition='top center'
+    ))
+    scatter.update_layout(
+        title='Final Points on Parameter Plane',
+        xaxis_title='Temperature (°C)',
+        yaxis_title='Pressure (bar)'
+    )
+    scatter.show()
+
+def plot_results_matplotlib(results):
+    plt.figure(figsize=(10, 6))
+    for r in results:
+        plt.plot(r['loss_hist'], label=r['name'])
+    plt.xlabel("Iteration")
+    plt.ylabel("Loss")
+    plt.legend()
+    plt.title("Loss Comparison (Matplotlib)")
+    plt.grid(True)
+    plt.show()
+
+# === GUI ===
+class OptimizerGUI:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Two-Stroke Engine Optimizer")
+        self.mode = tk.StringVar(value="hypothetical")
+        self.benchmark_running = False  # Flag to prevent double-run
+
+        ttk.Label(root, text="Select optimization mode:").grid(row=0, column=0, sticky="w", padx=10, pady=5)
+        ttk.Radiobutton(
+            root, text="Hypothetical (realistic model)",
+            variable=self.mode, value="hypothetical",
+            command=self.toggle_mode
+        ).grid(row=1, column=0, sticky="w", padx=20)
+        ttk.Radiobutton(
+            root, text="Real parameters (T, P, RPM required; Fuel & Exhaust optional)",
+            variable=self.mode, value="real",
+            command=self.toggle_mode
+        ).grid(row=2, column=0, sticky="w", padx=20)
+
+        self.real_frame = ttk.Frame(root)
+        self.real_frame.grid(row=3, column=0, columnspan=2, padx=10, pady=10, sticky="ew")
+
+        self.entries = {}
+        labels_defaults = [
+            ("T (°C)", "800.0"),
+            ("P (bar)", "15.0"),
+            ("RPM", "5000.0"),
+            ("Fuel (L/h)", ""),
+            ("Exhaust Temp (°C)", "")
+        ]
+        for i, (label, default) in enumerate(labels_defaults):
+            ttk.Label(self.real_frame, text=label).grid(row=i, column=0, sticky="e", padx=5, pady=2)
+            entry = ttk.Entry(self.real_frame, width=12)
+            entry.insert(0, default)
+            entry.grid(row=i, column=1, padx=5, pady=2, sticky="w")
+            self.entries[label] = entry
+
+        # Initial parameters frame
+        self.init_frame = ttk.Frame(root)
+        self.init_frame.grid(row=5, column=0, columnspan=2, padx=10, pady=10, sticky="ew")
+
+        self.init_entries = {}
+        labels_defaults_init = [
+            ("Initial T (°C)", "800.0"),
+            ("Initial P (bar)", "15.0"),
+            ("Initial RPM", "5000.0")
+        ]
+        for i, (label, default) in enumerate(labels_defaults_init):
+            ttk.Label(self.init_frame, text=label).grid(row=i, column=0, sticky="e", padx=5, pady=2)
+            entry = ttk.Entry(self.init_frame, width=12)
+            entry.insert(0, default)
+            entry.grid(row=i, column=1, padx=5, pady=2, sticky="w")
+            self.init_entries[label] = entry
+
+        self.toggle_mode()
+        ttk.Button(root, text="Run Benchmark", command=self.run_benchmark).grid(row=6, column=0, columnspan=2, pady=15)
+
+    def toggle_mode(self):
+        if self.mode.get() == "real":
+            self.real_frame.grid()
+            self.init_frame.grid_remove()
+        else:
+            self.real_frame.grid_remove()
+            self.init_frame.grid()
+
+    def run_benchmark(self):
+        if getattr(self, 'benchmark_running', False):
+            tk.messagebox.showinfo("Info", "Benchmark already running.")
+            return
+        self.benchmark_running = True
+        try:
+            steps = 150
+            if self.mode.get() == "hypothetical":
+                # Use user-provided initial point
+                try:
+                    init_T = float(self.init_entries["Initial T (°C)"].get())
+                    init_P = float(self.init_entries["Initial P (bar)"].get())
+                    init_RPM = float(self.init_entries["Initial RPM"].get())
+                    init_point = np.array([init_T, init_P, init_RPM], dtype=float)
+                except ValueError:
+                    tk.messagebox.showerror("Input Error", "Initial parameters must be valid numbers.")
+                    return
+                results = run_benchmark_torch(steps=steps, device=device, init_point=init_point)
+                analyze_and_export_results(results, mode="hypothetical", init_point=init_point)
+            else:
+                # Use T, P, RPM from real_frame as initial point
+                try:
+                    T = float(self.entries["T (°C)"].get())
+                    P = float(self.entries["P (bar)"].get())
+                    RPM = float(self.entries["RPM"].get())
+                except ValueError:
+                    tk.messagebox.showerror("Input Error", "T, P, and RPM must be valid numbers.")
+                    return
+
+                fuel_text = self.entries["Fuel (L/h)"].get().strip()
+                exhaust_text = self.entries["Exhaust Temp (°C)"].get().strip()
+                Fuel = float(fuel_text) if fuel_text else None
+                Exhaust = float(exhaust_text) if exhaust_text else None
+
+                init_point = np.array([T, P, RPM], dtype=float)
+                results = run_benchmark_torch(steps=steps, device=device, Fuel=Fuel, Exhaust=Exhaust, init_point=init_point)
+                analyze_and_export_results(results, mode="real", init_point=init_point, Fuel=Fuel, Exhaust=Exhaust)
+
+            try:
+                plot_results_plotly(results)
+            except Exception as e:
+                print("Plotly failed (using Matplotlib):", e)
+                plot_results_matplotlib(results)
+
+        except Exception as e:
+            tk.messagebox.showerror("Error", f"Failed to run benchmark:\n{str(e)}")
+        finally:
+            self.benchmark_running = False  # Reset flag after run
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = OptimizerGUI(root)
+    root.mainloop()
