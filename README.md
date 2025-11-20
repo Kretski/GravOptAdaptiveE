@@ -1,3 +1,15 @@
+# GravOpt vs Anti-GravOpt: Real-Time Sabotage Attack ⚔️😈
+
+![GravOpt fights while being actively sabotaged](gravopt_under_attack.gif)
+
+**Bright green line** = Energy under attack (GravOpt – the hero)  
+**Red spikes** = Live sabotage attacks in real time  
+
+Even when someone deliberately messes with the parameters, GravOpt still converges!
+
+→ [Full code](sabotage_showdown.py)
+
+
 # GravOptAdaptiveE
 Quantum-Inspired Optimizer: 89.17% MAX-CUT in 9s
 ## For Enterprise & Research Teams
