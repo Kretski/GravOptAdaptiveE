@@ -40,34 +40,6 @@ More Real Results
 Goemans-Williamson (1995) guarantees ≈87.8%. GravOpt consistently hits 99.9999%.
 More Real Results
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 BenchmarkGravOptGoemans-WilliamsonImprovementRandom 12-node ER graphs99.9999%~87.8%+12.2%Gset G1–G81 (average)89.17%87.8%+1.4%10-qubit VQE (random H)–10.35 energyAdamW baseline+24.6%
 Works with PyTorch · Pennylane · JAX (coming)
 Install
@@ -90,6 +62,34 @@ Try it · Break it · Star it
 If you beat my score on any Gset graph – open an issue.
 First one gets a beer in Sofia 🍺
 Made with ❤️ and gravitational madness in Bulgaria
+
+https://github.com/Kretski/Azuro-AI/tree/main
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
