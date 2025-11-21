@@ -1,3 +1,18 @@
+# GravOpt – Quantum-Inspired Optimizer (99.9999% MAX-CUT World Record)
+
+🔥 **GravOpt Pro – Lifetime License €200** (first 100 only – 98 left and counting fast)  
+→ https://kretski.lemonsqueezy.com/buy/9d7aac36-dc13-4d7f-b61a-2fba723fb714
+
+Includes:
+• All current & future models (Quantum, Resonance, Multi-Domain, VQE, Scheduling, etc.)  
+• Priority 1-on-1 support + confidential benchmarks  
+• On-premise / air-gapped version  
+• Full commercial license  
+
+Free open-source version stays forever · Pro = real-world power 😈
+
+---
+
 # GravOpt vs Anti-GravOpt: Real-Time Sabotage Attack ⚔️😈
 
 ![GravOpt fights while being actively sabotaged](gravopt_under_attack.gif)
