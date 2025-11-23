@@ -60,29 +60,15 @@ for _ in range(100):
 ratio = (len(G.edges()) - loss.item()) / len(G.edges())
 print(f"MAX-CUT: {ratio:.10%}")  # → 99.9999xxxx% (±0.00005% over 100 runs)
 Goemans-Williamson (1995) guarantees ≈87.8%. GravOpt consistently hits 99.9999%.
-
-Benchmarks
-Benchmark
-GravOpt
-Goemans-Williamson
-Improvement
-Random 12-node ER graphs
-99.9999%
-~87.8%
-+12.2%
-Gset G1–G81 (average)
-89.17%
-87.8%
-+1.4%
-10-qubit VQE (random H)
-–10.35
-AdamW baseline
-+24.6%
+[table-af524961-88b2-457d-a091-96190ea3ea7c.csv](https://github.com/user-attachments/files/23693157/table-af524961-88b2-457d-a091-96190ea3ea7c.csv)
+Benchmark,GravOpt,Baseline,Improvement
+Random 12-node ER graphs,99.9999%,Goemans-Williamson (~87.8%),+12.2%
+Gset G1–G81 (average),89.17%,Goemans-Williamson (87.8%),+1.4%
+10-qubit VQE (random H),–10.35,AdamW baseline,+24.6%
 Works with: PyTorch · Pennylane · JAX (coming soon)
 
 Install (open-source version)
-bash
-1
+pip install gravopt
 Papers & Links
 Preprint: vixra.org/abs/2511.17607773
 (arXiv submission pending, code: AYD7IS)
