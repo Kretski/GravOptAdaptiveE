@@ -9,7 +9,7 @@
 > **0.3676 on G81 (20k nodes)**  
 > All on CPU, <80 MB RAM, no solvers.
 
-## ✨ How it Works
+## ✨ How It Works
 GravOpt uses a gravitational analogy with adaptive parameter freezing, beating Goemans-Williamson (+12.2%) by 10–200x faster than Simulated Annealing/Tabu.
 
 ## 🚀 Try It (Open-Source)
@@ -22,7 +22,7 @@ opt = GravOptAdaptiveE_QV([params], lr=0.02)
 for _ in range(100): opt.step()
 print(f"MAX-CUT: {(len(G.edges())-loss.item())/len(G.edges()):.6%}") # ~99.9999%
 Install: pip install gravopt networkx torch
-Benchmarks
+📊 Benchmarks
 
 G81 (20k nodes): 0.3676 in ~1200 steps (~6–8 min CPU).
 Numba solver: GravOpt-MAXCUT
@@ -49,7 +49,8 @@ Confidential benchmarks
 Priority support
 All future models (Quantum, VQE, etc.)
 🔥 First 100 licenses: €200 (reg. €590)
-Buy: [Stripe](https://buy.stripe.com/14A28r4rEfYEaUgfwh4c800)
-Contact: kretski@gmail.com/violetvet@abv.bg
+<button style="background-color: #008CBA; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Buy Now</button>
+Contact: kretski@gmail.com / violetvet@abv.bg
 
 Made with ❤️ in Bulgaria by Azuro AI.
+text
