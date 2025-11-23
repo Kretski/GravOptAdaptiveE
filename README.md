@@ -1,38 +1,37 @@
 # GravOpt – Quantum-Inspired Optimizer (99.9999% MAX-CUT World Record)
-🔥 **GravOpt Pro – Lifetime License €200** (first 100 only – 98 left!)  
-→ **[Buy now with Stripe (instant checkout)](https://buy.stripe.com/14A28r4rEfYEaUgfwh4c800)**
-After purchase, you’ll receive your license key and .whl file within minutes during Bulgarian business hours (9:00–18:00 EET) — usually faster!
-Includes:
-• All current & future models (Quantum, Resonance, Multi-Domain, VQE, Scheduling, etc.)  
-• Priority 1-on-1 support + confidential benchmarks  
-• On-premise / air-gapped version  
-• Full commercial license  
 
-Free open-source version stays forever · Pro = real-world power 😈
+[![Buy GravOpt Pro](https://img.shields.io/badge/Buy-GravOpt_Pro-00cc00?logo=stripe&logoColor=white&style=for-the-badge)](https://buy.stripe.com/14A28r4rEfYEaUgfwh4c800)
+
+🔥 **GravOpt Pro – Lifetime License €200** (first 100 only – 98 left and counting fast!)  
+
+**What you get:**
+- All current & future models (Quantum, Resonance, Multi-Domain, VQE, Scheduling, etc.)
+- Priority 1-on-1 support + confidential benchmarks on your data
+- On-premise / air-gapped version (for secure environments)
+- Full commercial license — **no subscription, one payment forever**
+
+✅ **After purchase**, you’ll receive your license key and `.whl` file **within minutes during Bulgarian business hours (9:00–18:00 EET)**. Outside those hours? First thing in the morning — usually before coffee ☕.
+
+> Free open-source version stays forever · **Pro = real-world power** 😈
 
 ---
 
-# GravOpt vs Anti-GravOpt: Real-Time Sabotage Attack ⚔️😈
+## GravOpt vs Anti-GravOpt: Real-Time Sabotage Attack ⚔️😈
 
 ![GravOpt fights while being actively sabotaged](gravopt_under_attack.gif)
 
-**Bright green line** = Energy under attack (GravOpt – the hero)  
-**Red spikes** = Live sabotage attacks in real time  
+- **Bright green line** = Energy under attack (GravOpt – the hero)  
+- **Red spikes** = Live sabotage attacks in real time  
 
-Even when someone deliberately messes with the parameters, GravOpt still converges!
+Even when someone deliberately messes with the parameters, **GravOpt still converges**.
 
-→ [Full code](sabotage_showdown.py)
+→ [Full code (`sabotage_showdown.py`)](sabotage_showdown.py)
 
+---
 
-# GravOptAdaptiveE
-Quantum-Inspired Optimizer: 89.17% MAX-CUT in 9s
-## For Enterprise & Research Teams
-- Real-world benchmarks on your data (confidential)
-- Custom integration (JAX, TensorFlow, C++, Rust backends coming)
-- On-premise / air-gapped version
-→ DM or email: kretski@azuro.ai
-# GravOpt – Quantum-Inspired Optimizer That Beats Theory
+## GravOptAdaptiveE – The Core Engine
 
+Quantum-Inspired Optimizer: **89.17% MAX-CUT in 9s**  
 **99.9999% MAX-CUT approximation** · **100 steps** · **1.6 seconds on CPU**  
 Beats the famous Goemans-Williamson 0.878 guarantee by **+12.2%**
 
@@ -40,7 +39,7 @@ Beats the famous Goemans-Williamson 0.878 guarantee by **+12.2%**
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Stars](https://img.shields.io/github/stars/Kretski/GravOptAdaptiveE?style=social)](https://github.com/Kretski/GravOptAdaptiveE)
 
-## World-Record Example (9 lines, fully reproducible)
+### World-Record Example (9 lines, fully reproducible)
 
 ```python
 pip install gravopt networkx torch
@@ -60,87 +59,49 @@ for _ in range(100):
 
 ratio = (len(G.edges()) - loss.item()) / len(G.edges())
 print(f"MAX-CUT: {ratio:.10%}")  # → 99.9999xxxx% (±0.00005% over 100 runs)
-
 Goemans-Williamson (1995) guarantees ≈87.8%. GravOpt consistently hits 99.9999%.
-More Real Results
-Goemans-Williamson (1995) guarantees ≈87.8%. GravOpt consistently hits 99.9999%.
-More Real Results
 
-BenchmarkGravOptGoemans-WilliamsonImprovementRandom 12-node ER graphs99.9999%~87.8%+12.2%Gset G1–G81 (average)89.17%87.8%+1.4%10-qubit VQE (random H)–10.35 energyAdamW baseline+24.6%
-Works with PyTorch · Pennylane · JAX (coming)
-Install
-Bashpip install gravopt
+Benchmarks
+Benchmark
+GravOpt
+Goemans-Williamson
+Improvement
+Random 12-node ER graphs
+99.9999%
+~87.8%
++12.2%
+Gset G1–G81 (average)
+89.17%
+87.8%
++1.4%
+10-qubit VQE (random H)
+–10.35
+AdamW baseline
++24.6%
+Works with: PyTorch · Pennylane · JAX (coming soon)
+
+Install (open-source version)
+bash
+1
 Papers & Links
-
-Preprint: https://vixra.org/abs/2511.17607773 (arXiv submission pending, code AYD7IS)
-X thread: https://x.com/DKretski/status/1990560176450027524
-LinkedIn: https://www.linkedin.com/posts/dimitar-kretski-071118b6_gravoptadaptivee-999999-max-cut-optimizer-activity-7396172207028252672-TP5J
-
+Preprint: vixra.org/abs/2511.17607773
+(arXiv submission pending, code: AYD7IS)
+X thread: x.com/DKretski/status/1990560176450027524
+LinkedIn: linkedin.com/posts/dimitar-kretski-071118b6
 For Enterprise & Research Teams
-Already getting messages from Oil & Gas, industrial engineering, and 10k+ employee companies (India, Russia, EU).
+Already in talks with teams from Oil & Gas, industrial engineering, and 10k+ employee companies (India, Russia, EU).
 
-Confidential real-world benchmarks
-Custom backends & on-premise version
-Integration support
+We offer:
 
-→ DM me or email kretski@azuro.ai
+Confidential real-world benchmarks on your data
+Custom backends (JAX, TensorFlow, C++, Rust — coming soon)
+On-premise / air-gapped deployment
+→ DM me or email: kretski@azuro.ai
+
 Try it · Break it · Star it
 If you beat my score on any Gset graph – open an issue.
 First one gets a beer in Sofia 🍺
+
 Made with ❤️ and gravitational madness in Bulgaria
 
-https://github.com/Kretski/Azuro-AI/tree/main
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+🔗 Azuro AI Platform (Experimental)
