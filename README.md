@@ -42,7 +42,7 @@ For large sparse graphs (G81+), see the pure-Numba solver:
 → github.com/Kretski/GravOpt-MAXCUT
 GravOpt Pro (commercial)
 For enterprise & research teams needing:
-
+https://buy.stripe.com/14A28r4rEfYEaUgfwh4c800
 On-premise / air-gapped deployment
 Confidential benchmarks on your data
 Priority 1:1 support
