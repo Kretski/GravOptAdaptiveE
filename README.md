@@ -49,7 +49,7 @@ Confidential benchmarks
 Priority support
 All future models (Quantum, VQE, etc.)
 🔥 First 100 licenses: €200 (reg. €590)
-Buy Now
+Buy Now                              (https://buy.stripe.com/14A28r4rEfYEaUgfwh4c800)
 Contact: kretski@gmail.com / violetvet@abv.bg
 
 Made with ❤️ in Bulgaria by Azuro AI.
