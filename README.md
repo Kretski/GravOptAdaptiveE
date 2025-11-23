@@ -1,3 +1,9 @@
+## 🚀 Try GravOpt Pro in 60 Seconds (No Install)
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/gist/Kretski/d8e8c2a7da0b94a172ab8efe87ea8895/untitled2.ipynb)
+
+> This demo uses a DEMO license key. For commercial use, get your key at:  
+> → [PitchHut Project Page](https://www.pitchhut.com/project/gravoptadaptivee)
 # GravOpt – Physics-Inspired Optimizer for MAX-CUT
 
 [![PyPI](https://img.shields.io/pypi/v/gravopt?color=success)](https://pypi.org/project/gravopt/)  
