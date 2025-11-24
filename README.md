@@ -130,3 +130,18 @@ Commercial Inquiries: Use PitchHut project page
 Made with ❤️ in Bulgaria by Azuro AI
 
 Accelerating optimization through physics-inspired computing.
+## 🔒 License Information
+
+**DEMO VERSION LIMITATIONS:**
+- Max 20 nodes
+- Max 200 iterations  
+- Basic visualization only
+- No technical support
+
+**COMMERCIAL LICENSE INCLUDES:**
+- Unlimited node size
+- Unlimited iterations
+- Advanced features
+- Priority support
+- Future updates
+- Full source code
