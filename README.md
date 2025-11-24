@@ -1,4 +1,19 @@
-# GravOpt – Physics-Inspired Optimizer for MAX-CUT
+
+## 🔒 License Information
+
+**DEMO VERSION LIMITATIONS:**
+- Max 20 nodes
+- Max 200 iterations  
+- Basic visualization only
+- No technical support
+
+**COMMERCIAL LICENSE INCLUDES:**
+- Unlimited node size
+- Unlimited iterations
+- Advanced features
+- Priority support
+- Future updates
+- Full source code# GravOpt – Physics-Inspired Optimizer for MAX-CUT
 
 [![PyPI](https://img.shields.io/pypi/v/gravopt?color=success)](https://pypi.org/project/gravopt/)  
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)  
