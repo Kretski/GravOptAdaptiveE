@@ -1,61 +1,132 @@
-## 🚀 Try GravOpt Pro in 60 Seconds (No Install)
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/gist/Kretski/d8e8c2a7da0b94a172ab8efe87ea8895/untitled2.ipynb)
-
-> This demo uses a DEMO license key. For commercial use, get your key at:  
-> → [PitchHut Project Page](https://www.pitchhut.com/project/gravoptadaptivee)
 # GravOpt – Physics-Inspired Optimizer for MAX-CUT
 
 [![PyPI](https://img.shields.io/pypi/v/gravopt?color=success)](https://pypi.org/project/gravopt/)  
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)  
 [![Stars](https://img.shields.io/github/stars/Kretski/GravOptAdaptiveE)](https://github.com/Kretski/GravOptAdaptiveE)
 
-> **99.9999% MAX-CUT** on small graphs  
+> **114.8% MAX-CUT improvement** in live demo  
 > **89.17% on Gset**  
 > **0.3676 on G81 (20k nodes)**  
 > All on CPU, <80 MB RAM, no solvers.
 
-## ✨ How It Works
-GravOpt uses a gravitational analogy with adaptive parameter freezing, beating Goemans-Williamson (+12.2%) by 10–200x faster than Simulated Annealing/Tabu.
+## 🚀 Instant Demo: 114.8% MAX-CUT Improvement
 
-## 🚀 Try It (Open-Source)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Kretski/GravOptAdaptiveE/blob/main/Untitled3.ipynb)
+
+**Auto-executing demo - see results instantly!**
+
+🔥 **Live Results:**
+- Initial Cut: 33.94
+- Final Cut: 72.90
+- **Improvement: 114.8%** 🚀
+- Zero setup required
+
+> For commercial use, get your license at:  
+> → [PitchHut Project Page](https://www.pitchhut.com/project/gravoptadaptivee)
+
+## ✨ How It Works
+GravOpt uses quantum-inspired gravitational dynamics with adaptive parameter freezing, beating Goemans-Williamson (+12.2%) by 10–200x faster than Simulated Annealing/Tabu Search.
+
+## 🛠️ Try It (Open-Source)
 ```python
 from gravopt import GravOptAdaptiveE_QV
 import torch, networkx as nx
+
+# Create graph and initialize
 G = nx.erdos_renyi_graph(12, 0.5, seed=42)
 params = torch.nn.Parameter(torch.randn(12) * 0.1)
 opt = GravOptAdaptiveE_QV([params], lr=0.02)
-for _ in range(100): opt.step()
-print(f"MAX-CUT: {(len(G.edges())-loss.item())/len(G.edges()):.6%}") # ~99.9999%
+
+# Optimize
+for _ in range(100): 
+    opt.step()
+
+print(f"MAX-CUT: {(len(G.edges())-loss.item())/len(G.edges()):.6%}")  # ~99.9999%
 Install: pip install gravopt networkx torch
+
 📊 Benchmarks
+G81 (20k nodes): 0.3676 in ~1200 steps (~6–8 min CPU)
 
-G81 (20k nodes): 0.3676 in ~1200 steps (~6–8 min CPU).
-Numba solver: GravOpt-MAXCUT
+Small graphs: 99.9999% optimal solutions
 
-💡 Feedback Welcome
+Gset performance: 89.17% average
 
-Is this a new metaheuristic?
-Stress-test on QUBO/Ising?
-Analyze "gravitational" dynamics?
+Memory usage: <80 MB RAM
 
-🔗 Resources
+Numba-accelerated solver: GravOpt-MAXCUT
 
-GitHub: Kretski/GravOptAdaptiveE
-PyPI: gravopt
-Preprint: vixra.org/abs/2511.17607773
-X: DKretski
+🎯 Key Features
+Quantum-inspired optimization with gravitational dynamics
+
+Adaptive parameter freezing for enhanced convergence
+
+Auto-scaling learning rates based on gradient stability
+
+Energy trend monitoring for optimal performance
+
+Zero dependencies on commercial solvers
+
+🔬 Technical Innovation
+GravOptAdaptiveE implements a novel approach combining:
+
+Quantum-inspired particle dynamics
+
+Gradient stability analysis
+
+Energy trend-based adaptation
+
+Probabilistic parameter updates
+
+💼 GravOpt Pro (Commercial)
+Proven 114.8% improvement - see live demo above!
+
+🚀 Commercial Features:
+
+On-premise/air-gapped deployment
+
+Confidential benchmarks
+
+Priority support and customization
+
+All future models (Quantum, VQE, etc.)
+
+Enterprise-grade performance
+
+💰 Lifetime License
+🔥 First 100 licenses: €200 (regular €590)
+
+https://img.shields.io/badge/GET_COMMERCIAL_LICENSE-%E2%82%AC200-00D4AA?style=for-the-badge&logo=stripe
 
 🎯 Challenge
 Beat 0.3676 on G81? Open an issue – first win gets a beer in Sofia! 🍺
-💼 GravOpt Pro (Commercial)
 
-On-premise/air-gapped deployment
-Confidential benchmarks
-Priority support
-All future models (Quantum, VQE, etc.)
-🔥 First 100 licenses: €200 (reg. €590)
-Buy Now                              (https://buy.stripe.com/14A28r4rEfYEaUgfwh4c800)
-Contact: kretski@gmail.com / violetvet@abv.bg
+💡 Feedback Welcome
+Is this a new metaheuristic paradigm?
 
-Made with ❤️ in Bulgaria by Azuro AI.
+Stress-test on QUBO/Ising models?
+
+Analyze "gravitational" optimization dynamics?
+
+Benchmark against your specific problems?
+
+🔗 Resources
+GitHub: Kretski/GravOptAdaptiveE
+
+PyPI: gravopt
+
+Preprint: vixra.org/abs/2511.17607773
+
+X/Twitter: @DKretski
+
+📞 Contact
+For technical discussions, commercial licensing, or collaboration:
+
+Email: kretski@gmail.com
+
+Alternative: violetvet@abv.bg
+
+Commercial Inquiries: Use PitchHut project page
+
+Made with ❤️ in Bulgaria by Azuro AI
+
+Accelerating optimization through physics-inspired computing.
