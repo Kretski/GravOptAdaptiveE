@@ -1,54 +1,27 @@
 # GravOpt Adaptive-E – Open-Source Demo
 
 Quantum-inspired MAX-CUT optimizer  
-→ 0.3676 on G81 (20k nodes) in ~7 min CPU · <80 MB RAM
+→ **0.3676** on G81 (20 000 nodes) in ~7 min · single CPU core · <80 MB RAM  
 
-### Live Demo (auto-run)
+### Live Demo (runs automatically)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Kretski/GravOptAdaptiveE/blob/main/Untitled3.ipynb)
 
-### Install
-```bash
-pip install gravopt networkx torch
-Limitations (demo only)
+### Demo limitations
+- Max 20 nodes  
+- Max 200 iterations  
+- No support  
 
-Max 20 nodes
-Max 200 iterations
-No support
+### Want to run 10 000 … 1 000 000+ node graphs today?
 
-Want unlimited nodes & priority support?
-→ GravOpt Pro – lifetime license €200 (first 100)
-https://github.com/Kretski/GravOpt-Pro
-→ Direct purchase: https://buy.stripe.com/14A28r4rEfYEaUgfwh4c800
-Made in Bulgaria · MIT License
-textТова е всичко. Нищо повече. Никакви големи бутони, никакви „first 100 €200“ тук – всичко отива в Pro репото.
+**GravOpt Pro** – lifetime license €200 (first 100 only)
 
-#### 2. Pro репото → https://github.com/Kretski/GravOpt-Pro  
-(това е новият ти паричен печат)
+[![BUY GRAVOPT PRO €200 →](https://img.shields.io/badge/BUY_GRAVOPT_PRO-€200-critical?style=for-the-badge&logo=stripe)](https://buy.stripe.com/14A28r4rEfYEaUgfwh4c800)
 
-Остави точно това в README.md (много агресивно и продаващо):
+→ Direct link to Pro version: https://github.com/Kretski/GravOpt-Pro
 
-```markdown
-# GravOpt Pro – Unlimited MAX-CUT Solver
+After the first 100 licenses the price becomes €590+  
+Sold: 0 / 100
 
-**Lifetime license €200** – first 100 only (then €590+)
+Install demo: `pip install gravopt networkx torch`
 
-[![BUY NOW €200](https://img.shields.io/badge/BUY_LIFETIME_LICENSE-€200-critical?style=for-the-badge&logo=stripe)](https://buy.stripe.com/14A28r4rEfYEaUgfwh4c800)
-
-### Why pay?
-- Unlimited nodes (tested 1.2M+)
-- Unlimited iterations
-- Full source code
-- All future versions free (Quantum, VQE, QUBO…)
-- Priority email support (kretski@gmail.com)
-- Air-gapped / on-premise ready
-
-### Latest release
-→ [v0.1.1 – English + Unlimited](https://github.com/Kretski/GravOpt-Pro/releases/latest)
-
-### Already using the free demo?
-You’ve seen the power.  
-Now remove all limits → one-time payment, use forever.
-
-Sold: 0 / 100 (price increases after 100)
-
-Questions? kretski@gmail.com
+Made with ❤ in Bulgaria · MIT License
