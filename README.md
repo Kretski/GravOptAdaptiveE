@@ -16,7 +16,16 @@ One-time payment €200 → you get the unlimited version immediately (wheel + l
 **GravOpt Pro** – lifetime license €200 (first 100 only)
 
 [![BUY GRAVOPT PRO €200 →](https://img.shields.io/badge/BUY_GRAVOPT_PRO-€200-critical?style=for-the-badge&logo=stripe)](https://buy.stripe.com/14A28r4rEfYEaUgfwh4c800)
+<p align="center">
+  <img src="https://i.ibb.co/XXyourimage/gravopt-pro-200.png" width="380" alt="GravOpt Pro €200">
+</p>
 
+<p align="center">
+  <b>GravOpt Pro €200 lifetime license – purchase window open only 13:00–16:00 EET</b><br>
+  First 100 only • After that price becomes €590+<br>
+  <b><span style="color:#ff4444">Only 37 licenses left today</span></b><br>
+  <a href="https://buy.stripe.com/14A28r4rEfYEaUgfwh4c800">Click here to buy during open hours</a>
+</p>
 → Direct link to Pro version: https://github.com/Kretski/GravOpt-Pro
 
 After the first 100 licenses the price becomes €590+  
