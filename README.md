@@ -1,4 +1,4 @@
-
+[![BUY LICENSE](https://img.shields.io/badge/BUY_LIFETIME_LICENSE-€200-orange?style=for-the-badge)](https://buy.stripe.com/aFa3cv2jw27O4vS97T4c801)
 ## 🔒 License Information
 
 **DEMO VERSION LIMITATIONS:**
