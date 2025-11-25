@@ -5,7 +5,7 @@ Quantum-inspired MAX-CUT optimizer
 
 ### Live Demo (runs automatically)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Kretski/GravOptAdaptiveE/blob/main/Untitled3.ipynb)
-
+One-time payment €200 → you get the unlimited version immediately (wheel + license key)
 ### Demo limitations
 - Max 20 nodes  
 - Max 200 iterations  
